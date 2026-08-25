@@ -4,20 +4,25 @@ using namespace std;
 
 int main () {
 
-    unsigned int n, k;
-    list<unsigned int> l;
-    list<unsigned int>::iterator it;
+    int n , k, NC, res, caso=1;
+    vector<int> v;
 
-    cin >> n >> k;
+    cin >> NC;
 
-    for (int i=0; i < l.size(); i++) {
-        l.push_back(i);
+    while(NC--) {
+
+        cin >> n >> k;
+
+        int res = 0; // J(1) = 0
+        for (int i = 2; i <= n; i++) {
+            res = (res + k) % i;
+        }
+
+        printf("Case %d: %d\n", caso, res +1);
+        caso++;
     }
 
-    it = l.begin();
-    while(l.size() != 1) {
-    
-    }
+
 
     return 0;
 }
