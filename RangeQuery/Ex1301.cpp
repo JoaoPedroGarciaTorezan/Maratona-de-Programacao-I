@@ -1,5 +1,5 @@
 #include <bits/stdc++.h>
-#define MAX 10005
+#define MAX 100005
 
 using namespace std;
 
@@ -52,15 +52,25 @@ int update(segment_tree *tree, int i, int val) {
 
 }
 
-int main() {
+// nova: libera a árvore ao fim de cada caso de teste
+void destruir(segment_tree *tree) {
+    if(!tree) return;
+    destruir(tree->left);
+    destruir(tree->right);
+    delete tree;
+}
 
+int main() {
+    
     int N, K, i, j, v;
     int p;
     char c;
-    vector<int> a(MAX);
+    vector<int> a;
     segment_tree *t;
 
-    while((scanf("%d %d", &N, &K) != EOF)) {
+    while(cin >> N >> K) {
+
+        a.assign(N + 1, 1);   // tamanho correto, a[0] neutro
 
         for(int i=1; i<= N; i++) {
             cin >> a[i];
@@ -78,10 +88,10 @@ int main() {
                 cin >> i >> v;
                 if(v > 0) v = 1;
                 else if(v < 0) v = -1;
+                else v = 0;
                 update(t, i, v);
             }
             else {
-                p = 1;
                 cin >> i >> j;
                 p = query(t, i, j);
                 if(p > 0) cout << "+";
@@ -90,7 +100,8 @@ int main() {
             }
         }
         cout << "\n";
-        a.clear();
+
+        destruir(t);
     }
 
     return 0;
