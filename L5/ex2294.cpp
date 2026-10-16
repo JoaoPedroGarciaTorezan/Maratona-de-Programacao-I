@@ -1,61 +1,57 @@
 #include <bits/stdc++.h>
-#define INF 0x3f3f3f3f // infinito
 
 using namespace std;
 
-vector<int> dist;      // vetor de distancias
-vector<int> pred;      // vetor de predecessores
-vector<int> visitado;  // marca se o vertice foi visitado
-priority_queue<pair<int, int>> q; // fila: (-distancia, vertice)
-
-// G[a][b] = peso da aresta a->b (INF se nao existe)
-void dijkstra(vector<vector<int>>& G, int s) {
-    int N = G.size();
-    dist.assign(N, INF);
-    pred.assign(N, -1);
-    visitado.assign(N, 0);
-    q = priority_queue<pair<int, int>>(); // limpa a fila
-
-    dist[s] = 0;
-    q.push({0, s});
-
-    while (!q.empty()) {
-        int a = q.top().second;
-        q.pop();
-
-        if (visitado[a]) continue;
-        visitado[a] = 1;
-
-        for (int b = 0; b < N; b++) {
-            int w = G[a][b];
-            if (w == INF) continue; // sem aresta
-
-            if (dist[a] + w < dist[b]) {
-                dist[b] = dist[a] + w;
-                pred[b] = a;
-                q.push({-dist[b], b});
-            }
-        }
-    }
-}
-
 int main () {
 
-    int N, M;
-    
-    cin >> N >> M;
+    int R, C;
+    cin >> R >> C;
+    vector<vector<int>> grid(R, vector<int> (C));
 
-    vector<vector<int>> grafo(N, vector<int> (N, INF));
+    int px[] = {1, -1, 0, 0}, py[]= {0, 0, 1, -1}; // escolhe direções
 
-    for(int i=0; i<N; i++){
-
-        for(int j=0; j<M; j++)
-            cin >> grafo[i][j];
-
+    for(int i=0; i<R; i++){
+        for(int j=0; j<C; j++)
+            cin >> grid[i][j];
     }
 
-    dijkstra(grafo, 0);
+    int ox, oy;
+    int dx, dy; //posições de origem e destino
+    for(int i = 0;i < R; i++) {
+        for(int j = 0; j<C; j++) {
+            if(grid[i][j] == 3) {
+                ox = i; 
+                oy = j;
+            }
+            if(grid[i][j] == 0){
+                dx = i;
+                dy = j;
+            }
 
+        }
+    }
+
+    vector<vector<int>> dist(R, vector<int> (C, -1));
+    queue<pair<int, int>> q;
+    dist[ox][oy] = 0;
+    q.push({ox, oy});
+    while(!q.empty()){
+        auto [x,y] = q.front(); q.pop();
+        if(grid[x][y] == 0){          // primeira saída alcançada = a mais próxima
+            cout << dist[x][y] << "\n";
+            return 0;
+        }
+
+
+        for(int k = 0; k<4; k++){ //vizinhos nas 4 direções
+            int nx = x + px[k], ny = y + py[k];//célula vizinha
+            if(nx < 0 || ny < 0 || nx>= R || ny >= C) continue;
+            if(grid[nx][ny] == 2) continue;
+            if(dist[nx][ny] != -1) continue;
+            dist[nx][ny] = dist[x][y] + 1;
+            q.push({nx, ny});
+        }
+    }
 
     return 0;
 }
