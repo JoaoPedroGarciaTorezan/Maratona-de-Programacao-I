@@ -39,24 +39,39 @@ void dijkstra(vector<vector<pair<int, int>>>& G, int s) {
     }
 }
 
-int main() {
-    int N = 5;
-    vector<vector<pair<int, int>>> G(N);
+int main () {
+    int V, E; //número de verties e número de arestas
+    cin >> V >> E;
+    vector<vector<pair<int, int>>> adj(V);
 
-    // grafo nao direcionado: (u, v, peso)
-    auto add = [&](int u, int v, int w) {
-        G[u].push_back({v, w});
-        G[v].push_back({u, w});
-    };
-    add(0, 1, 4);
-    add(0, 2, 1);
-    add(2, 1, 2);
-    add(1, 3, 1);
-    add(2, 3, 5);
-    add(3, 4, 3);
+    for (int t = 0; t < E; t++) {
+        int u, v, w;
+        cin >> u >> v >> w; // u -> v Peso w
+        adj[u].push_back({v, w});
+        adj[v].push_back({u, w});  // tire esta linha se o grafo for direcionado
+    }
 
-    dijkstra(G, 0);
+    dijkstra(adj, 0);
 
-    for (int i = 0; i < N; i++)
-        cout << "dist[" << i << "] = " << dist[i] << ", pred = " << pred[i] << "\n";
+    cout << "Distancia de cada vertice: ";
+    for(int i=0; i<V; i++){
+        cout << dist[i] << " - ";
+    }
+    
+    int dest;
+    cout << "Vertice destino: ";
+    cin >> dest; cout << "\n";
+    vector<int> caminho;
+    caminho.push_back(dest);
+    while(pred[dest] != -1){
+        caminho.push_back(pred[dest]);
+        dest = pred[dest];
+    }
+    reverse(caminho.begin(), caminho.end());
+
+    cout << "\nCaminho minimo: ";
+    for(int m: caminho)
+        cout << m << " -> ";
+    cout << "\n";
+    return 0;
 }
